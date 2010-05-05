@@ -1,6 +1,6 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 10
+%define release %mkrel 11
 
 Name:		%{name}
 Version:	%{version}

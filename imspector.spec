@@ -1,6 +1,6 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 11
+%define release %mkrel 12
 
 Name:		%{name}
 Version:	%{version}
@@ -75,7 +75,9 @@ This package gives imspector sqlite logging and auto-messeging capabilities.
 %patch4 -p0 -b .ssl
 %patch5 -p0 -b .link
 
-cat imspector.conf|sed -r 's|/usr/lib|%{_libdir}|' >  imspector.conf
+cat imspector.conf|sed -r 's|/usr/lib|%{_libdir}|' >  imspector.conf.1
+rm -f imspector.conf
+mv imspector.conf.1 imspector.conf
 
 %build
 %make CXX="g++ %optflags %ldflags"

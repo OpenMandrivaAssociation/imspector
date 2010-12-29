@@ -1,6 +1,6 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 14
+%define release %mkrel 15
 
 %if %mdkversion < 200900
         %define ldflags  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
@@ -13,7 +13,7 @@ Summary:    Multiple IM transparent proxy
 License:    GPLv2+
 Group:      Networking/Other
 URL:        http://www.imspector.org/
-Source0:     http://www.imspector.org/downloads/%{name}-%{version}.20101031.tar.gz
+Source0:     http://www.imspector.org/downloads/%{name}-20101229.tar.gz
 Source1:     imspector.sysconfig
 Source2:     imspector.init
 Patch0:      imspector-make.patch

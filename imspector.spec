@@ -1,6 +1,6 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 15
+%define release %mkrel 17
 
 %if %mdkversion < 200900
         %define ldflags  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id

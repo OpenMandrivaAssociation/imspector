@@ -1,9 +1,11 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 19
+%define release %mkrel 20
 
-%if %mdkversion < 200900
-        %define ldflags  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
+%if "%{distribution}" == "Mandriva Linux"
+	%if %mdkversion < 200900
+        	%define ldflags  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
+	%endif
 %endif
 
 Name:		%{name}
@@ -29,8 +31,10 @@ BuildRequires: sqlite3-devel
 Requires:	webserver
 Requires:	openssl
 Requires(post):   rpm-helper
-%if %mdkversion < 201010
-Requires(postun):   rpm-helper
+%if "%{distribution}" == "Mandriva Linux"
+	%if %mdkversion < 201010
+	Requires(postun):   rpm-helper
+	%endif
 %endif
 BuildRoot:  %{_tmppath}/%{name}-%{version}
 
@@ -128,13 +132,17 @@ install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 %postun
 %_postun_userdel imspector
 %_postun_groupdel imspector
-%if %mdkversion < 201010
-%_postun_webapp
+%if "%{distribution}" == "Mandriva Linux"
+	%if %mdkversion < 201010
+		%_postun_webapp
+	%endif
 %endif
 
 %post
-%if %mdkversion < 201010
-%_post_webapp
+%if "%{distribution}" == "Mandriva Linux"
+	%if %mdkversion < 201010
+		%_post_webapp
+	%endif
 %endif
 %_create_ssl_certificate imspector
 %_post_service imspector
@@ -179,3 +187,5 @@ install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 %files sqlite
 %{_libdir}/imspector/sqliteloggingplugin.so
 %{_libdir}/imspector/dbresponderplugin.so
+
+

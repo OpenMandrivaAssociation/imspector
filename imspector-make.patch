@@ -1,0 +1,61 @@
+--- Makefile.orig	2010-02-07 23:19:00.000000000 +0100
++++ Makefile	2010-02-07 23:22:50.000000000 +0100
+@@ -34,9 +34,9 @@
+ LIBIMSPECTOR_OBJS = socket.o options.o tools.o
+ 
+ PROTOCOL_PLUGINS = msnprotocolplugin.so icqprotocolplugin.so yahooprotocolplugin.so ircprotocolplugin.so ggprotocolplugin.so jabberprotocolplugin.so httpsprotocolplugin.so
+-LOGGING_PLUGINS = fileloggingplugin.so debugloggingplugin.so catsloggingplugin.so
++LOGGING_PLUGINS = fileloggingplugin.so debugloggingplugin.so catsloggingplugin.so mysqlloggingplugin.so sqliteloggingplugin.so postgresqlloggingplugin.so
+ FILTER_PLUGINS = badwordsfilterplugin.so aclfilterplugin.so miscfilterplugin.so censordfilterplugin.so
+-RESPONDER_PLUGINS = 
++RESPONDER_PLUGINS = dbresponderplugin.so
+ 
+ PLUGINS = $(PROTOCOL_PLUGINS) $(LOGGING_PLUGINS) $(CONTENT_PLUGINS) $(FILTER_PLUGINS) $(RESPONDER_PLUGINS) $(ADD_PLUGINS)
+ 
+@@ -160,30 +160,30 @@
+ 	$(CXX) $(CXXFLAGS) dbresponderplugin.cpp -c -I$(PREFIX)/include
+ 	
+ install: imspector libimspector.so $(PLUGINS)
+-	-mkdir -p $(DESTDIR)/$(PREFIX)/sbin
+-	-mkdir -p $(DESTDIR)/$(PREFIX)/lib/imspector
+-	-install imspector $(DESTDIR)/$(PREFIX)/sbin/imspector
+-	-install libimspector.so $(DESTDIR)/$(PREFIX)/lib/libimspector.so
++	-mkdir -p $(sbindir)
++	-mkdir -p $(libdir)/imspector
++	-install imspector $(sbindir)/imspector
++	-install libimspector.so $(libdir)/libimspector.so
+ 	-(for PLUGIN in $(PLUGINS) $(ADD_PLUGINS); do \
+-		install $$PLUGIN $(DESTDIR)/$(PREFIX)/lib/imspector/$$PLUGIN; \
++		install $$PLUGIN $(libdir)/imspector/$$PLUGIN; \
+ 	done);
+-	-mkdir -p $(DESTDIR)/$(PREFIX)/etc/imspector
+-	-install imspector.conf $(DESTDIR)/$(PREFIX)/etc/imspector/imspector.conf
+-	-install badwords.txt $(DESTDIR)/$(PREFIX)/etc/imspector/badwords.txt
+-	-install acl.txt $(DESTDIR)/$(PREFIX)/etc/imspector/acl.txt
+-	-mkdir -p /var/log/imspector
+-	-mkdir -p /var/lib/imspector
++	-mkdir -p $(sysconfdir)/imspector
++	-install imspector.conf $(sysconfdir)/imspector/imspector.conf
++	-install badwords.txt $(sysconfdir)/imspector/badwords.txt
++	-install acl.txt $(sysconfdir)/imspector/acl.txt
++	-mkdir -p $(localstatedir)/log/imspector
++	-mkdir -p $(libdir)/imspector
+ 
+ install-cert:
+-	-mkdir -p $(DESTDIR)/$(PREFIX)/etc/imspector
++	-mkdir -p $(DESTDIR)/$(sysconfdir)/ssl/imspector
+ 	-openssl req -new -newkey rsa:1024 -days 365 -nodes -x509 \
+-		-keyout $(DESTDIR)/$(PREFIX)/etc/imspector/serverkey.pem \
+-		-out $(DESTDIR)/$(PREFIX)/etc/imspector/servercert.pem
++		-keyout $(DESTDIR)/$(sysconfdir)/ssl/imspector/serverkey.pem \
++		-out $(DESTDIR)/$(sysconfdir)/ssl/imspector/servercert.pem
+ 
+ install-ca-cert: install-cert
+ 	-openssl req -new -newkey rsa:1024 -days 365 -nodes -x509 \
+-		-keyout $(DESTDIR)/$(PREFIX)/etc/imspector/cakey.pem \
+-		-out $(DESTDIR)/$(PREFIX)/etc/imspector/cacert.pem
++		-keyout $(DESTDIR)/$(sysconfdir)/ssl/imspector/cakey.pem \
++		-out $(DESTDIR)/$(sysconfdir)/ssl/imspector/cacert.pem
+ 
+ uninstall:
+ 	-rm -f $(DESTDIR)/$(PREFIX)/sbin/imspector

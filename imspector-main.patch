@@ -1,0 +1,11 @@
+--- main.cpp	2010-02-23 18:21:10.000000000 +0100
++++ main.cpp.dlucio	2010-11-01 05:16:01.000000000 +0100
+@@ -17,7 +17,7 @@
+ #include "imspector.h"
+ 
+ /*! The default location for where to find the config file. */
+-#define DEFAULT_CONFIG "/usr/etc/imspector/imspector.conf"
++#define DEFAULT_CONFIG "/etc/imspector/imspector.conf"
+ /*! The location of the logging process's UNIX socket. */
+ #define LOGGING_SOCKET "/tmp/.imspectorlog"
+ /*! The default place for where to find plugins. */

@@ -1,0 +1,44 @@
+diff -urN temp/imspector-0.8/aclfilterplugin.cpp imspector-0.8/aclfilterplugin.cpp
+--- temp/imspector-0.8/aclfilterplugin.cpp	2008-10-15 06:11:12.000000000 -0300
++++ imspector-0.8/aclfilterplugin.cpp	2009-07-07 17:06:21.000000000 -0300
+@@ -149,10 +149,12 @@
+ 		
+ 	while (fgets(buffer, STRING_SIZE, hfile))
+ 	{
++		bool sameline = false;
+ 		stripnewline(buffer);
+ 
+ 		if (!strlen(buffer)) continue;
+ 		if (buffer[0] == '#') continue;
++		if (buffer[strlen(buffer)-1] == '\\') sameline = true;
+ 		
+ 		std::string command;
+ 		std::vector<std::string> args;
+@@ -173,6 +175,27 @@
+ 
+ 		aclelement.localid = args.front();
+ 		args.erase(args.begin());
++
++		if (sameline) {
++			/* remove '\' from the end of line */
++			args.erase(args.end());
++			char buffer2[STRING_SIZE];
++			memset(buffer2, 0, STRING_SIZE);			
++			while (sameline && fgets(buffer2, STRING_SIZE, hfile)) {
++				stripnewline(buffer2);
++				if (buffer2[0] == '#') continue;
++				if (buffer2[strlen(buffer2)-1] != '\\') sameline = false;
++				/* first in this call is first contact */
++				std::string first;
++				std::vector<std::string> args2;
++				int argc2;
++				chopline(buffer2, first, args2, argc2);
++				args2.insert(args2.begin(), first); /* inserts the first contact */
++				args2.erase(args2.end());
++				std::vector<std::string>::iterator it;
++				for (it = args2.begin(); it != args2.end(); it++) args.push_back(*it);
++			}
++		}
+ 		
+ 		aclelement.remoteids = args;
+ 		

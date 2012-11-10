@@ -1,0 +1,41 @@
+--- imspector.conf	2008-09-04 15:48:13.000000000 +0200
++++ imspector.conf.new	2010-03-01 01:03:44.000000000 +0100
+@@ -4,18 +4,18 @@
+ #http_port=18080
+ 
+ # This is the default location of protocol and logging plugins.
+-#plugin_dir=/usr/lib/imspector
++plugin_dir=/usr/lib/imspector
+ 
+ # For dropping privs - you probably want to do this.
+-#user=imspector
+-#group=imspector
++user=imspector
++group=imspector
+ 
+ # SSL support?
+ #ssl=on
+-#ssl_key=/usr/etc/imspector/serverkey.pem
++#ssl_key=/etc/pki/tls/private/imspector.pem
+ 
+ # Fixed cert?
+-#ssl_cert=/usr/etc/imspector/servercert.pem
++#ssl_cert=/etc/pki/tls/certs/imspector.pem
+ 
+ # Or certs created on-the-fly and signed against a CA
+ #ssl_ca_key=/usr/etc/imspector/cakey.pem
+@@ -70,12 +70,12 @@
+ #sqlite_file=/path/to/file
+ 
+ # Bad words filtering
+-#badwords_filename=/usr/etc/imspector/badwords.txt
++badwords_filename=/etc/imspector/badwords.txt
+ #badwords_replace_character=*
+ #badwords_block_count=1
+ 
+ # ACL
+-#acl_filename=/usr/etc/imspector/acl.txt
++acl_filename=/etc/imspector/acl.txt
+ 
+ # SQLite-backed filter
+ #db_filter_filename=/path/to/file

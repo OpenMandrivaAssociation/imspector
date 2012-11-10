@@ -1,0 +1,20 @@
+--- Makefile.link	2010-04-21 02:59:00.000000000 +0000
++++ Makefile	2010-04-21 02:59:42.000000000 +0000
+@@ -27,7 +27,7 @@
+ 
+ CXXFLAGS = -Wall -O2 -fPIC $(SSL_FLAGS)
+ 
+-PLUGIN_FLAGS = $(LIBS) -fPIC -shared -Wl,-soname,$@ -o $@
++PLUGIN_FLAGS = $(LDFLAGS) -fPIC -shared -Wl,-soname,$@ -o $@ $(SSL_LIBS)
+ 
+ IMSPECTOR_OBJS = main.o protocolplugin.o loggingplugin.o filterplugin.o responderplugin.o $(SSL_OBJS)
+ 
+@@ -49,7 +49,7 @@
+ 	$(CXX) $(IMSPECTOR_OBJS) $(LIBS) libimspector.so -o imspector $(SSL_LIBS)
+ 
+ libimspector.so: $(LIBIMSPECTOR_OBJS)
+-	$(CXX) $(LIBIMSPECTOR_OBJS) $(LIBS) -fPIC -shared -Wl,-soname,libimspector.so -o libimspector.so
++	$(CXX) $(LIBIMSPECTOR_OBJS) $(LIBS) $(SSL_LIBS) -lcrypto -fPIC -shared -Wl,-soname,libimspector.so -o libimspector.so
+ 
+ msnprotocolplugin.so: msnprotocolplugin.o libimspector.so
+ 	$(CXX) msnprotocolplugin.o libimspector.so $(PLUGIN_FLAGS)

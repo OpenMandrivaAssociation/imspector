@@ -1,0 +1,139 @@
+#!/bin/bash
+# imspector	This shell script takes care of starting and stopping
+#		Imspector IM proxy
+#
+# chkconfig: 345 90 25
+# description: Imspector - IMSpector is an Instant Messenger proxy with \
+#	monitoring, blocking and content-filtering capabilities. Currently \
+#	it supports MSN, Jabber/XMPP, AIM,ICQ, Yahoo, IRC and Gadu-Gadu to \
+#	different degrees
+# pidfile: /var/run/imspector/imspector.pid
+# config: /etc/imspector/imspector.conf
+
+### BEGIN INIT INFO
+# Provides: imspector
+# Required-Start: $network
+# Required-Stop: $network
+# Should-Start: $named 
+# Should-Stop: $named 
+# Short-Description: Starts the squid daemon
+# Description: Imspector is a full-featured MI proxy  with support for \
+#				many protocols, as MSN, ICQ and others.
+#              
+### END INIT INFO
+
+
+PATH=/usr/bin:/sbin:/bin:/usr/sbin
+export PATH
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+if [ -f /etc/sysconfig/imspector ]; then
+  . /etc/sysconfig/imspector
+fi
+
+# check if the imspector conf file is present
+[ -f $IMSPECTOR_CONFIG ] || exit 0
+
+
+# don't raise an error if the config file is incomplete 
+# set defaults instead:
+IMSPECTOR_OPTS=${IMSPECTOR_OPTS:-""}
+
+IMSPECTOR=imspector
+prog=$IMSPECTOR
+
+RETVAL=0
+
+start() {
+
+    echo -n $"Starting $prog: "
+    $IMSPECTOR $IMSPECTOR_OPTS >> /var/log/imspector/imspector.out 2>&1
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ]; then 
+       pidof $IMSPECTOR > /var/run/imspector.pid
+    fi
+
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$IMSPECTOR
+    [ $RETVAL -eq 0 ] && success
+    [ $RETVAL -ne 0 ] && failure
+    echo
+    return $RETVAL
+}
+
+stop() {
+    echo -n  $"Stopping $prog: "
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ] ; then
+	[ -f //var/run/imspector.pid ] && kill `cat /var/run/imspector.pid` 2>&1
+    	rm -f /var/lock/subsys/$IMSPECTOR  /var/run/imspector.pid
+	success; echo 
+    else
+    	failure; echo
+    fi
+    return $RETVAL
+}    
+
+reload() {
+    echo "not implemented yet"
+}
+
+restart() {
+    stop
+    start
+}    
+
+condrestart() {
+    [ -e /var/lock/subsys/imspector ] && restart || :
+}
+
+rhstatus() { 
+    echo "not implemented yet"
+}
+
+probe() {
+    return 0
+}    
+
+case "$1" in
+start)
+    start
+    ;;
+
+stop)
+    stop
+    ;;
+
+reload)
+    reload
+    ;;
+
+restart)
+    restart
+    ;;
+
+condrestart)
+    condrestart
+    ;;
+
+status)
+    rhstatus
+    ;;
+
+probe)
+    exit 0
+    ;;
+
+*)
+    echo $"Usage: $0 {start|stop|status|reload|restart|condrestart}"
+    exit 1
+esac
+
+exit $?

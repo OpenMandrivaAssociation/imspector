@@ -1,0 +1,4 @@
+# currently IMspector only supports -d for debugging
+IMSPECTOR_OPTS=
+
+IMSPECTOR_CONFIG="/etc/imspector/imspector.conf"

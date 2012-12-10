@@ -1,12 +1,6 @@
 %define name    imspector
 %define version 0.9
-%define release %mkrel 20
-
-%if "%{distribution}" == "Mandriva Linux"
-	%if %mdkversion < 200900
-        	%define ldflags  -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id
-	%endif
-%endif
+%define release 20
 
 Name:		%{name}
 Version:	%{version}
@@ -31,12 +25,6 @@ BuildRequires: sqlite3-devel
 Requires:	webserver
 Requires:	openssl
 Requires(post):   rpm-helper
-%if "%{distribution}" == "Mandriva Linux"
-	%if %mdkversion < 201010
-	Requires(postun):   rpm-helper
-	%endif
-%endif
-BuildRoot:  %{_tmppath}/%{name}-%{version}
 
 
 %description
@@ -88,14 +76,13 @@ rm -f imspector.conf
 mv imspector.conf.1 imspector.conf
 
 %build
-%make CXX="g++ %optflags %ldflags"
+%make CXX="g++ %optflags %ldflags" LIBS="-lcrypto -ldl"
 %make mysqlloggingplugin.so CXX="g++ %optflags"
 %make postgresqlloggingplugin.so CXX="g++ %optflags"
 %make sqliteloggingplugin.so  CXX="g++ %optflags"
 %make dbresponderplugin.so CXX="g++ %optflags"
 
 %install
-%{__rm} -rf %{buildroot}
 
 %makeinstall
 install -d %{buildroot}%{_var}/www/cgi-bin
@@ -119,31 +106,17 @@ install -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/imspector
 install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 
 
-%clean
-%{__rm} -rf %{buildroot}
-
 %preun
 %_preun_service imspector
 
 %pre
 %_pre_useradd imspector %{_var}/lib/imspector /bin/false
-#%_pre_groupadd imspector
 
 %postun
 %_postun_userdel imspector
 %_postun_groupdel imspector
-%if "%{distribution}" == "Mandriva Linux"
-	%if %mdkversion < 201010
-		%_postun_webapp
-	%endif
-%endif
 
 %post
-%if "%{distribution}" == "Mandriva Linux"
-	%if %mdkversion < 201010
-		%_post_webapp
-	%endif
-%endif
 %_create_ssl_certificate imspector
 %_post_service imspector
 
@@ -188,4 +161,123 @@ install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 %{_libdir}/imspector/sqliteloggingplugin.so
 %{_libdir}/imspector/dbresponderplugin.so
 
+
+
+
+%changelog
+* Wed Aug 03 2011 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-20mdv2012.0
++ Revision: 693079
+- trying to make this SPEC compatible with mageia so it will be easier for me
+
+* Thu Mar 17 2011 Oden Eriksson <oeriksson@mandriva.com> 0.9-19
++ Revision: 645804
+- relink against libmysqlclient.so.18
+
+* Sat Jan 01 2011 Oden Eriksson <oeriksson@mandriva.com> 0.9-18mdv2011.0
++ Revision: 627249
+- rebuilt against mysql-5.5.8 libs, again
+
+* Thu Dec 30 2010 Oden Eriksson <oeriksson@mandriva.com> 0.9-17mdv2011.0
++ Revision: 626529
+- rebuilt against mysql-5.5.8 libs
+
+* Wed Dec 29 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-15mdv2011.0
++ Revision: 625827
+- Fixes for new MSN protocol from upstream
+
+* Mon Nov 01 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-14mdv2011.0
++ Revision: 591322
+- MSNP21 support
+  P1 rediffed
+
+* Fri Jul 16 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-13mdv2011.0
++ Revision: 554432
+- Backport 2008.1-  support
+
+* Fri May 14 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-12mdv2010.1
++ Revision: 544734
+- Conf file was zero, sed error
+- Sintax error in init
+
+* Thu May 06 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-11mdv2010.1
++ Revision: 542720
+- Rebuild
+
+  + Guillaume Rousse <guillomovitch@mandriva.org>
+    - rise from the dead, there is a volonteer to maintain it
+
+* Wed Apr 21 2010 Funda Wang <fwang@mandriva.org> 0.9-10mdv2010.1
++ Revision: 537357
+- bump rel
+- fix linkage
+
+* Mon Mar 01 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-9mdv2010.1
++ Revision: 512837
+- Imspector as daemon
+
+* Mon Mar 01 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-8mdv2010.1
++ Revision: 512827
+- P2 reddif
+  add substitution into plugindir at imspector.conf to let non root users find libs
+
+* Tue Feb 23 2010 Guillaume Rousse <guillomovitch@mandriva.org> 0.9-7mdv2010.1
++ Revision: 510416
+- use rpm-helper macros to install ssl certificates
+- apache configuration is a configuration file
+- install directories with correct permissions directly
+- switch default access policy to 'open to all'
+- cleanup dependencies
+
+* Wed Feb 17 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-6mdv2010.1
++ Revision: 507049
+- Rebuild
+- S1 to begin as service, we need more work yet
+- Description for sqlite sub-package  fixed
+
+* Sun Feb 07 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-3mdv2010.1
++ Revision: 501846
+- P0 updated
+- MySQL log support
+  PostgreSQL log support
+  SQLite log support
+  SQLite message injection
+
+* Wed Jan 20 2010 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-2mdv2010.1
++ Revision: 493937
+- rely on filetrigger for reloading apache configuration begining with 2010.1, rpm-helper macros otherwise
+
+* Mon Jul 27 2009 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.9-1mdv2010.0
++ Revision: 400890
+- P1 rediff
+- 0.9.0
+
+* Thu Jul 16 2009 Funda Wang <fwang@mandriva.org> 0.8-5mdv2010.0
++ Revision: 396634
+- drop database requires as they are not build by default
+
+* Wed Jul 08 2009 Luis Daniel Lucio Quiroz <dlucio@mandriva.org> 0.8-4mdv2010.0
++ Revision: 393386
+- P1+P4=P1
+- again....
+- P4 for gcc44
+- again
+- P3 added, multiple configuration lines is now possible like other unix configs
+
+* Thu Mar 12 2009 Emmanuel Andry <eandry@mandriva.org> 0.8-3mdv2009.1
++ Revision: 354280
+- create ssl certificate at install time
+- add apache configuration
+
+* Tue Mar 10 2009 Emmanuel Andry <eandry@mandriva.org> 0.8-2mdv2009.1
++ Revision: 353444
+- import imspector
+
+
+* Mon Mar  9 2009 Daniel Lucio <dlucio@okay.com.mx> 0.8-2mdv2009.1
+- Addon of requires and buildrequieres
+- CGI script
+- SSL certificates install
+
+* Fri Mar  6 2009 Daniel Lucio <dlucio@okay.com.mx> 0.8-1mdv2009.0
+- First package
 

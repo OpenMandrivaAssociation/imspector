@@ -95,8 +95,7 @@ mv contrib/imspector.cgi %{buildroot}%{_var}/www/cgi-bin/
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d/
 cat > %{buildroot}/etc/httpd/conf/webapps.d/imspector.conf << EOF
 <Location /cgi-bin/imspector.cgi>
-    Order allow,deny
-    Allow from all
+    Require all granted
 </Location>
 EOF
 

@@ -1,10 +1,6 @@
-%define name    imspector
-%define version 0.9
-%define release 20
-
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:	    imspector
+Version:    0.9
+Release:    21
 Summary:    Multiple IM transparent proxy
 License:    GPLv2+
 Group:      Networking/Other

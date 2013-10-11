@@ -20,6 +20,7 @@ BuildRequires:  postgresql-devel
 BuildRequires: sqlite3-devel
 Requires:	webserver
 Requires:	openssl
+Requires:	apache-mod_socache_shmcb # actually, only if webserver is apache, but there is no syntax for such aa condition
 Requires(post):   rpm-helper
 
 

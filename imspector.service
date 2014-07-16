@@ -1,0 +1,15 @@
+[Unit]
+Description=Starts the squid daemon
+Requires=rpcbind.service
+After=syslog.target network.target rpcbind.service 
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+EnvironmentFile=/etc/sysconfig/network
+EnvironmentFile=/etc/sysconfig/imspector
+EnvironmentFile=/etc/imspector/imspector.conf
+ExecStart=/usr/sbin/imspector
+
+[Install]
+WantedBy=multi-user.target

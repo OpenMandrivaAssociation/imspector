@@ -1,6 +1,6 @@
 Name:	    imspector
 Version:    0.9
-Release:    23
+Release:    25
 Summary:    Multiple IM transparent proxy
 License:    GPLv2+
 Group:      Networking/Other
@@ -103,7 +103,7 @@ install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 
 
 %preun
-%_preun_service imspector
+%systemd_preun %{name}.service
 
 %pre
 %_pre_useradd imspector %{_var}/lib/imspector /bin/false
@@ -111,10 +111,11 @@ install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/imspector
 %postun
 %_postun_userdel imspector
 %_postun_groupdel imspector
+%systemd_postun_with_restart %{name}.service
 
 %post
 %_create_ssl_certificate imspector
-%_post_service imspector
+%systemd_post %{name}.service
 
 %files
 %defattr(0755,root,root)

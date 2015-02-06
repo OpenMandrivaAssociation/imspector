@@ -1,6 +1,6 @@
 Name:	    imspector
 Version:    0.9
-Release:    25
+Release:    26
 Summary:    Multiple IM transparent proxy
 License:    GPLv2+
 Group:      Networking/Other

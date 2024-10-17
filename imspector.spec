@@ -4,7 +4,7 @@ Release:    26
 Summary:    Multiple IM transparent proxy
 License:    GPLv2+
 Group:      Networking/Other
-URL:        http://www.imspector.org/
+URL:        https://www.imspector.org/
 Source0:     http://www.imspector.org/downloads/%{name}-20101229.tar.gz
 Source1:     imspector.sysconfig
 Source2:     imspector.service

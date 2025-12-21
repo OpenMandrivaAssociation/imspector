@@ -14,6 +14,7 @@ Patch2:	     imspector-conf.patch
 Patch3:      multiple-lines.patch
 Patch4:      imspector-0.9-openssl-1.0.patch
 Patch5:      imspector-0.9-link.patch
+BuildRequires:	make
 BuildRequires:  openssl-devel >= 0.9.7
 BuildRequires: mysql-devel
 BuildRequires:  postgresql-devel
